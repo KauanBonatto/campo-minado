@@ -15,6 +15,7 @@ interface SquareProps {
 
 export default function Home() {
   const qtdBombas = 4;
+  const [carregando, setCarregando] = useState<boolean>(true);
   const [matriz, setMatriz] = useState<SquareProps[][]>([]);
   
   const marksRemain = useMemo(() => {
@@ -44,6 +45,7 @@ export default function Home() {
       newMatriz.push(newRow);
     }
     setMatriz(newMatriz);
+    setCarregando(false);
   };
 
   const markFlag = (
@@ -70,6 +72,8 @@ export default function Home() {
   useEffect(() => {
     formarMatriz(10, 10);
   }, []);
+
+  if (carregando) return null;
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
