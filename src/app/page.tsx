@@ -14,7 +14,7 @@ interface SquareProps {
 }
 
 export default function Home() {
-  const qtdBombas = 3;
+  const qtdBombas = 4;
   const [matriz, setMatriz] = useState<SquareProps[][]>([]);
   
   const marksRemain = useMemo(() => {
@@ -57,7 +57,7 @@ export default function Home() {
       const newMatriz = matriz.map(row => {
         return row.map(square => {
           if (square.id == squareId) {
-            square.marked = marksRemain == 0 ? false : !marked;
+            square.marked = !marksRemain ? false : !marked;
           }
           return square;
         });
@@ -78,7 +78,7 @@ export default function Home() {
         <h2 className="mt-5 font-bold">
           <FontAwesomeIcon icon={faFlag} /> - {marksRemain}
         </h2>
-        <table className="flex flex-col justify-center items-center w-min mt-5 m-auto p-3 border rounded-md">
+        <table className="flex flex-col justify-center items-center w-min mt-5 m-auto p-3 border rounded-md" onContextMenu={e => e.preventDefault()}>
           <tbody>
             {matriz.map((row, rowIndex) => (
               <tr key={`row-${rowIndex}`} className="row flex w-min">
