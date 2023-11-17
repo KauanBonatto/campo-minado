@@ -1,0 +1,34 @@
+Padrões de problemas e solução
+
+Durante o andamento do jogo, existem diversos padrões de quadrados numerados que permitem 
+somente uma determinada configuração de minas. A fim de terminar o jogo tão cedo quanto possível,
+É preferível processar tais padrões primeiramente, e continuar analisando padrões mais complexos posteriormente. 
+Existem diversos métodos para resolver problemas do jogo sem contar com o o uso de adivinhação.
+
+Análise de um quadrado
+- Quando o número de quadrados não descobertos ao redor de um quadrado numerado é igual ao número sendo mostrado, 
+todos os quadrados adjacentes são minas. Em contrapartida, quando o número de quadrados com minas descobertas ao redor 
+de um quadrado numerado é igual ao número sendo mostrado, 
+quaisquer outro quadrado adjacente não possui mina, está seguro.
+
+Análise de dois quadrados
+- Com dois números de um campo minado, denominados x x e y y, existem três áreas distintas no campo: a) minas ao redor de tanto x x e y y, 
+b) minas ao redor de x x somente e c) minas ao redor de y y somente. Esse método de análise funciona 
+melhor quando os quadrados relativos a x x e y y são adjacentes, mas também pode ser 
+usado em outras situações. Sabe-se que o número de minas exclusivas a x x menos o número de minas 
+exclusivas a y y é igual a x − y {\displaystyle x-y}, o que pode ser usado para marcar bandeiras em minas ou 
+descobrir quadrados seguros.
+
+
+Análise de minas compartilhadas
+- Suponha que o campo possui um número "35" descoberto. De alguma forma descobre-se que dois quadrados adjacentes 
+ao "1" compartilham uma mina. Isso significa que todos os outros quadrados adjacentes ao "1" são seguros, 
+exceto pelos dois que compartilham a mina.
+
+
+Análise final
+- Usada no final do jogo, ela pode ser usada para descobrir um quadrado seguro quando todos os outros do campo 
+são ou seguros ou marcados como minas. Geralmente, tais quadrados finais estão localizados nas paredes do campo. 
+Em algumas versões do jogo, a quantidade de minas presentes no campo é conhecida. Perto do final do jogo quase todos 
+os quadrados já foram descobertos, e saber a quantidade de minas restantes (ainda não descobertas) pode 
+ser útil para resolver o padrão final do jogo. 
