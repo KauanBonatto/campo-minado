@@ -1,7 +1,7 @@
 "use client";
 
 import { faker } from "@faker-js/faker";
-import { faFlag } from "@fortawesome/free-solid-svg-icons";
+import { faBomb, faFlag } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useMemo, useState } from "react";
 
@@ -13,39 +13,133 @@ interface SquareProps {
   qtdBombsAround: number;
 }
 
+interface Bomb {
+  rowIndex: number;
+  columnIndex: number;
+}
+
+interface GameStateProps {
+  rows: number;
+  columns: number;
+  qtbBombs: number;
+}
+
 export default function Home() {
-  const qtdBombas = 4;
-  const [carregando, setCarregando] = useState<boolean>(true);
+  const [gameState, setGameState] = useState<GameStateProps>({
+    rows: 10,
+    columns: 10,
+    qtbBombs: 12,
+  });
+  const [loading, setLoading] = useState<boolean>(true);
   const [matriz, setMatriz] = useState<SquareProps[][]>([]);
-  
+
+  const newSquare = (row: number, column: number) => {
+    return {
+      id: faker.string.uuid(),
+      opened: false,
+      isBomb: false,
+      marked: false,
+      qtdBombsAround: 0,
+      row,
+      column,
+    };
+  };
+
   const marksRemain = useMemo(() => {
-    return qtdBombas - matriz.reduce((marksTotal, row) => (
-      marksTotal + row.reduce((marksRow, square) => 
-        marksRow + (square.marked ? 1 : 0
-      ), 0)
-    ), 0);
+    return (
+      gameState.qtbBombs -
+      matriz.reduce(
+        (marksTotal, row) =>
+          marksTotal +
+          row.reduce(
+            (marksRow, square) => marksRow + (square.marked ? 1 : 0),
+            0
+          ),
+        0
+      )
+    );
   }, [matriz]);
 
-  const formarMatriz = (rows: number, columns: number) => {
+  const createMatriz = (rows: number, columns: number) => {
     const newMatriz: SquareProps[][] = [];
-
     for (let row = 0; row < rows; row++) {
       const newRow: SquareProps[] = [];
-
       for (let column = 0; column < columns; column++) {
-        const square: SquareProps = {
+        newRow.push({
           id: faker.string.uuid(),
           opened: false,
           isBomb: false,
           marked: false,
           qtdBombsAround: 0,
-        };
-        newRow.push(square);
+        });
       }
       newMatriz.push(newRow);
     }
+    return newMatriz;
+  };
+
+  const formMatriz = (rows: number, columns: number) => {
+    const newMatriz: SquareProps[][] = createMatriz(rows, columns);
+    const bombs = generateBombs(rows, columns, gameState.qtbBombs);
+    for (let row = 0; row < rows; row++) {
+      for (let column = 0; column < columns; column++) {
+        const square = newSquare(row, column);
+        square.isBomb = bombs.some(
+          (bomb: Bomb) => bomb.rowIndex === row && bomb.columnIndex === column
+        );
+        square.qtdBombsAround = calculateQtdBombsAround(row, column, bombs);
+        newMatriz[row][column] = square;
+      }
+    }
     setMatriz(newMatriz);
-    setCarregando(false);
+    setLoading(false);
+  };
+
+  const generateBombs = (rows: number, columns: number, qtbBombs: number) => {
+    const bombs: any = [];
+    for (let i = 0; i < qtbBombs; i++) {
+      let bombRow = Math.floor(Math.random() * rows);
+      let bombColumn = Math.floor(Math.random() * columns);
+      while (
+        bombs.some(
+          (bomb: Bomb) =>
+            bomb.rowIndex === bombRow && bomb.columnIndex === bombColumn
+        )
+      ) {
+        bombRow = Math.floor(Math.random() * rows);
+        bombColumn = Math.floor(Math.random() * columns);
+      }
+      bombs.push({ rowIndex: bombRow, columnIndex: bombColumn });
+    }
+    return bombs;
+  };
+
+  const calculateQtdBombsAround = (
+    row: number,
+    column: number,
+    bombs: Bomb[]
+  ) => {
+    let qtdBombsAround = 0;
+    for (let i = -1; i <= 1; i++) {
+      for (let j = -1; j <= 1; j++) {
+        if (
+          row + i >= 0 &&
+          row + i < gameState.rows &&
+          column + j >= 0 &&
+          column + j < gameState.columns
+        ) {
+          if (
+            bombs.some(
+              (bomb) =>
+                bomb.rowIndex === row + i && bomb.columnIndex === column + j
+            )
+          ) {
+            qtdBombsAround++;
+          }
+        }
+      }
+    }
+    return qtdBombsAround;
   };
 
   const markFlag = (
@@ -54,26 +148,24 @@ export default function Home() {
     marked: boolean
   ) => {
     e.preventDefault();
-
-    setMatriz(matriz => {
-      const newMatriz = matriz.map(row => {
-        return row.map(square => {
+    setMatriz((matriz) => {
+      const newMatriz = matriz.map((row) => {
+        return row.map((square) => {
           if (square.id == squareId) {
             square.marked = !marksRemain ? false : !marked;
           }
           return square;
         });
       });
-
       return newMatriz;
     });
   };
 
   useEffect(() => {
-    formarMatriz(10, 10);
+    formMatriz(gameState.rows, gameState.columns);
   }, []);
 
-  if (carregando) return null;
+  if (loading) return null;
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
@@ -82,7 +174,10 @@ export default function Home() {
         <h2 className="mt-5 font-bold">
           <FontAwesomeIcon icon={faFlag} /> - {marksRemain}
         </h2>
-        <table className="flex flex-col justify-center items-center w-min mt-5 m-auto p-3 border rounded-md" onContextMenu={e => e.preventDefault()}>
+        <table
+          className="flex flex-col justify-center items-center w-min mt-5 m-auto p-3 border rounded-md"
+          onContextMenu={(e) => e.preventDefault()}
+        >
           <tbody>
             {matriz.map((row, rowIndex) => (
               <tr key={`row-${rowIndex}`} className="row flex w-min">
@@ -93,11 +188,18 @@ export default function Home() {
                   >
                     <div
                       className="square flex w-6 h-6 justify-center items-center bg-slate-200 hover:bg-gray-300 rounded-sm"
-                      onContextMenu={e => markFlag(e, column.id, column.marked)}
+                      onContextMenu={(e) =>
+                        markFlag(e, column.id, column.marked)
+                      }
+                      //onClick={}
                     >
                       {column.marked && (
                         <FontAwesomeIcon icon={faFlag} color="black" />
                       )}
+                      {column.isBomb && (
+                        <FontAwesomeIcon icon={faBomb} color="black" />
+                      )}
+                      {!column.isBomb && <p>{column.qtdBombsAround}</p>}
                     </div>
                   </td>
                 ))}
