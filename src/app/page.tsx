@@ -3,43 +3,43 @@
 import { faker } from "@faker-js/faker";
 import { faBomb, faFlag } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useEffect, useMemo, useState } from "react";
+import { Fragment, useEffect, useMemo, useState } from "react";
 
 interface SquareProps {
   id: string;
   opened: boolean;
-  isBomb: boolean;
   marked: boolean;
+  isBomb: boolean;
   qtdBombsAround: number;
 }
 
-interface Bomb {
+interface BombProps {
   rowIndex: number;
   columnIndex: number;
 }
 
-interface GameStateProps {
-  rows: number;
-  columns: number;
-  qtbBombs: number;
+interface GameConfigProps {
+  qtdRows: number;
+  qtdColumns: number;
+  qtdBombs: number;
 }
 
 export default function Home() {
-  const [gameState, setGameState] = useState<GameStateProps>({
-    rows: 10,
-    columns: 10,
-    qtbBombs: 12,
-  });
   const [loading, setLoading] = useState<boolean>(true);
   const [matriz, setMatriz] = useState<SquareProps[][]>([]);
+  const [gameConfig, setGameConfig] = useState<GameConfigProps>({
+    qtdRows: 10,
+    qtdColumns: 10,
+    qtdBombs: 10,
+  });
 
-  const newSquare = (row: number, column: number) => {
+  const newSquare = (row: number, column: number, bombs: BombProps[]) => {
     return {
       id: faker.string.uuid(),
       opened: false,
-      isBomb: false,
       marked: false,
-      qtdBombsAround: 0,
+      isBomb: isSquareBomb(bombs, row, column),
+      qtdBombsAround: calculateQtdBombsAround(row, column, bombs),
       row,
       column,
     };
@@ -47,7 +47,7 @@ export default function Home() {
 
   const marksRemain = useMemo(() => {
     return (
-      gameState.qtbBombs -
+      gameConfig.qtdBombs -
       matriz.reduce(
         (marksTotal, row) =>
           marksTotal +
@@ -60,11 +60,11 @@ export default function Home() {
     );
   }, [matriz]);
 
-  const createMatriz = (rows: number, columns: number) => {
+  const createMatriz = () => {
     const newMatriz: SquareProps[][] = [];
-    for (let row = 0; row < rows; row++) {
+    for (let row = 0; row < gameConfig.qtdRows; row++) {
       const newRow: SquareProps[] = [];
-      for (let column = 0; column < columns; column++) {
+      for (let column = 0; column < gameConfig.qtdColumns; column++) {
         newRow.push({
           id: faker.string.uuid(),
           opened: false,
@@ -78,62 +78,55 @@ export default function Home() {
     return newMatriz;
   };
 
-  const formMatriz = (rows: number, columns: number) => {
-    const newMatriz: SquareProps[][] = createMatriz(rows, columns);
-    const bombs = generateBombs(rows, columns, gameState.qtbBombs);
-    for (let row = 0; row < rows; row++) {
-      for (let column = 0; column < columns; column++) {
-        const square = newSquare(row, column);
-        square.isBomb = bombs.some(
-          (bomb: Bomb) => bomb.rowIndex === row && bomb.columnIndex === column
-        );
-        square.qtdBombsAround = calculateQtdBombsAround(row, column, bombs);
-        newMatriz[row][column] = square;
+  const createGame = () => {
+    const newMatriz: SquareProps[][] = createMatriz();
+    const bombs: BombProps[] = generateBombs();
+    for (let rowIndex = 0; rowIndex < gameConfig.qtdRows; rowIndex++) {
+      for (let columnIndex = 0; columnIndex < gameConfig.qtdColumns; columnIndex++) {
+        const square = newSquare(rowIndex, columnIndex, bombs);
+        newMatriz[rowIndex][columnIndex] = square;
       }
     }
     setMatriz(newMatriz);
     setLoading(false);
   };
 
-  const generateBombs = (rows: number, columns: number, qtbBombs: number) => {
-    const bombs: any = [];
-    for (let i = 0; i < qtbBombs; i++) {
-      let bombRow = Math.floor(Math.random() * rows);
-      let bombColumn = Math.floor(Math.random() * columns);
-      while (
-        bombs.some(
-          (bomb: Bomb) =>
-            bomb.rowIndex === bombRow && bomb.columnIndex === bombColumn
-        )
-      ) {
-        bombRow = Math.floor(Math.random() * rows);
-        bombColumn = Math.floor(Math.random() * columns);
+  const generateBombs = () => {
+    const bombs: BombProps[] = [];
+    for (let i = 0; i < gameConfig.qtdBombs; i++) {
+      let bombRow = Math.floor(Math.random() * gameConfig.qtdRows);
+      let bombColumn = Math.floor(Math.random() * gameConfig.qtdColumns);
+      while (isSquareBomb(bombs, bombRow, bombColumn)) {
+        bombRow = Math.floor(Math.random() * gameConfig.qtdRows);
+        bombColumn = Math.floor(Math.random() * gameConfig.qtdColumns);
       }
       bombs.push({ rowIndex: bombRow, columnIndex: bombColumn });
     }
     return bombs;
   };
 
+  const isSquareBomb = (bombs: BombProps[], rowIndex: number, columnIndex: number) => {
+    return bombs.some(
+      (bomb: BombProps) =>
+        bomb.rowIndex === rowIndex && bomb.columnIndex === columnIndex
+    );
+  };
+
   const calculateQtdBombsAround = (
     row: number,
     column: number,
-    bombs: Bomb[]
+    bombs: BombProps[]
   ) => {
     let qtdBombsAround = 0;
     for (let i = -1; i <= 1; i++) {
       for (let j = -1; j <= 1; j++) {
         if (
           row + i >= 0 &&
-          row + i < gameState.rows &&
+          row + i < gameConfig.qtdRows &&
           column + j >= 0 &&
-          column + j < gameState.columns
+          column + j < gameConfig.qtdColumns
         ) {
-          if (
-            bombs.some(
-              (bomb) =>
-                bomb.rowIndex === row + i && bomb.columnIndex === column + j
-            )
-          ) {
+          if (isSquareBomb(bombs, row + i, column + j)) {
             qtdBombsAround++;
           }
         }
@@ -144,25 +137,76 @@ export default function Home() {
 
   const markFlag = (
     e: React.MouseEvent<HTMLDivElement, MouseEvent>,
-    squareId: string,
+    rowIndex: number, 
+    columnIndex: number,
     marked: boolean
   ) => {
     e.preventDefault();
-    setMatriz((matriz) => {
-      const newMatriz = matriz.map((row) => {
-        return row.map((square) => {
-          if (square.id == squareId) {
-            square.marked = !marksRemain ? false : !marked;
-          }
-          return square;
+    setMatriz(prevState => {
+      const newMatriz = [...prevState];
+      newMatriz[rowIndex][columnIndex].marked = !marksRemain ? false : !marked;
+      return newMatriz;
+    });
+  };
+
+  const openSquare = (rowIndex: number, columnIndex: number) => {
+    setMatriz(prevState => {
+      const newMatriz = [...prevState];
+      newMatriz[rowIndex][columnIndex].opened = true;
+      newMatriz[rowIndex][columnIndex].marked = false;
+
+      if (newMatriz[rowIndex][columnIndex].isBomb) {
+        gameOver();
+      }
+
+      if (newMatriz[rowIndex][columnIndex].qtdBombsAround == 0) {
+        openSquaresAround(rowIndex, columnIndex);
+      }
+
+      return newMatriz;
+    });
+
+  };
+
+  const openSquaresAround = (rowIndex: number, columnIndex: number) => {
+    const newMatriz = [...matriz];
+
+    for (let i = -1; i <= 1; i++) {
+      for (let j = -1; j <= 1; j++) {
+        if (
+          rowIndex + i >= 0 &&
+          rowIndex + i < gameConfig.qtdRows &&
+          columnIndex + j >= 0 &&
+          columnIndex + j < gameConfig.qtdColumns &&
+          !newMatriz[rowIndex + i][columnIndex + j].opened
+        ) {
+            newMatriz[rowIndex + i][columnIndex + j].opened = true;
+            newMatriz[rowIndex + i][columnIndex + j].marked = false;
+
+            if (newMatriz[rowIndex + i][columnIndex + j].qtdBombsAround == 0) {
+              openSquaresAround(rowIndex + i, columnIndex + j);
+            }
+        }
+      }
+    }
+
+    setMatriz(newMatriz);
+  };
+
+  const gameOver = () => {
+    setMatriz((prevState: SquareProps[][]) => {
+      const newMatriz = prevState.map(row => {
+        return row.map(column => {
+          return { ...column, opened: true, marked: false };
         });
       });
+  
       return newMatriz;
     });
   };
 
   useEffect(() => {
-    formMatriz(gameState.rows, gameState.columns);
+    createGame();
   }, []);
 
   if (loading) return null;
@@ -184,22 +228,33 @@ export default function Home() {
                 {row.map((column, columnIndex) => (
                   <td
                     key={`column-${columnIndex}`}
-                    className="column select-none cursor-pointer"
+                    className="column select-none"
                   >
                     <div
-                      className="square flex w-6 h-6 justify-center items-center bg-slate-200 hover:bg-gray-300 rounded-sm"
-                      onContextMenu={(e) =>
-                        markFlag(e, column.id, column.marked)
-                      }
-                      //onClick={}
+                      {...(!column.opened ? { 
+                        onClick: () => openSquare(rowIndex, columnIndex), 
+                        onContextMenu: (e) => markFlag(e, rowIndex, columnIndex, column.marked),
+                        className: "square flex w-6 h-6 justify-center items-center bg-slate-200 hover:bg-gray-300 cursor-pointer rounded-sm"
+                      } : {
+                        className: "square flex w-6 h-6 justify-center items-center bg-gray-400 cursor-default rounded-sm"
+                      })}
                     >
-                      {column.marked && (
-                        <FontAwesomeIcon icon={faFlag} color="black" />
+                      {column.opened ? (
+                        <Fragment>
+                          {column.isBomb ? (
+                            <FontAwesomeIcon icon={faBomb} color="black" />
+                          ) : (
+                            <p>{column.qtdBombsAround > 0 && column.qtdBombsAround}</p>
+                          )}
+                        </Fragment>
+                      ) : (
+                        <Fragment>
+                          {column.marked && (
+                            <FontAwesomeIcon icon={faFlag} color="black" />
+                          )}
+                        </Fragment>
                       )}
-                      {column.isBomb && (
-                        <FontAwesomeIcon icon={faBomb} color="black" />
-                      )}
-                      {!column.isBomb && <p>{column.qtdBombsAround}</p>}
+
                     </div>
                   </td>
                 ))}
