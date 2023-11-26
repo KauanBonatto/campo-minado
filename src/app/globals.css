@@ -29,3 +29,7 @@ body {
 p {
   color: black;
 }
+
+* {
+  user-select: none !important;
+}

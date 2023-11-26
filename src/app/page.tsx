@@ -5,6 +5,8 @@ import { faBomb, faFlag } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Fragment, useEffect, useMemo, useState } from "react";
 
+import ModalConfig from "./modalConfigs";
+
 interface SquareProps {
   id: string;
   opened: boolean;
@@ -18,7 +20,8 @@ interface BombProps {
   columnIndex: number;
 }
 
-interface GameConfigProps {
+export interface GameConfigProps {
+  levelSelected: string;
   qtdRows: number;
   qtdColumns: number;
   qtdBombs: number;
@@ -26,12 +29,10 @@ interface GameConfigProps {
 
 export default function Home() {
   const [loading, setLoading] = useState<boolean>(true);
+  const [modalConfigOpen, setModalConfigOpen] = useState<boolean>(true);
+  const [isGameOver, setIsGameOver] = useState<boolean>(false);
   const [matriz, setMatriz] = useState<SquareProps[][]>([]);
-  const [gameConfig, setGameConfig] = useState<GameConfigProps>({
-    qtdRows: 10,
-    qtdColumns: 10,
-    qtdBombs: 10,
-  });
+  const [gameConfig, setGameConfig] = useState<GameConfigProps>({} as GameConfigProps);
 
   const newSquare = (row: number, column: number, bombs: BombProps[]) => {
     return {
@@ -203,23 +204,41 @@ export default function Home() {
   
       return newMatriz;
     });
+
+    setIsGameOver(true);
+  };
+
+  const handleRetry = () => {
+    setGameConfig(prevState => {
+      const newState = {...prevState};
+      return newState;
+    });
+
+    setIsGameOver(false);
+  };
+
+  const handleChangeLevel = () => {
+    setModalConfigOpen(true)
+    setIsGameOver(false);
   };
 
   useEffect(() => {
     createGame();
-  }, []);
+  }, [gameConfig]);
 
   if (loading) return null;
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div id="game">
-        <h1 className="text-center font-bold"> MINES - CAMPO MINADO</h1>
-        <h2 className="mt-5 font-bold">
-          <FontAwesomeIcon icon={faFlag} /> - {marksRemain}
-        </h2>
+      {!modalConfigOpen && <div id="game">
+        <h1 className="flex gap-2 m-auto w-max font-bold flex-col ">
+          CAMPO MINADO - NÍVEL {gameConfig.levelSelected}
+          <div>
+            <FontAwesomeIcon icon={faFlag} /> - {marksRemain}
+          </div>
+        </h1>
         <table
-          className="flex flex-col justify-center items-center w-min mt-5 m-auto p-3 border rounded-md"
+          className="flex flex-col justify-center items-center w-min mt-5 m-auto p-3 border rounded-md "
           onContextMenu={(e) => e.preventDefault()}
         >
           <tbody>
@@ -228,7 +247,7 @@ export default function Home() {
                 {row.map((column, columnIndex) => (
                   <td
                     key={`column-${columnIndex}`}
-                    className="column select-none"
+                    className={`column  ${!column.opened && 'cursor-pointer'}`}
                   >
                     <div
                       {...(!column.opened ? { 
@@ -262,7 +281,15 @@ export default function Home() {
             ))}
           </tbody>
         </table>
-      </div>
+
+        {isGameOver && <div className="flex justify-center gap-4 mt-8">
+            <div onClick={handleRetry} className="p-3 border font-bold rounded-md  cursor-pointer transition-all hover:bg-white hover:text-black hover:border-black">TENTAR DENOVO</div>
+            <div onClick={handleChangeLevel} className="p-3 border font-bold rounded-md  cursor-pointer transition-all hover:bg-white hover:text-black hover:border-black">TROCAR NÍVEL</div>
+          </div>}
+        </div>
+      }
+
+      <ModalConfig modalConfigOpen={modalConfigOpen} setModalConfigOpen={setModalConfigOpen} setGameConfig={setGameConfig} />
     </main>
   );
 }
