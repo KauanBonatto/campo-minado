@@ -1,2 +1,2 @@
 # Campo minado
-Mini game of mines ([campo-minado-mines.vercel.app](https://campo-minado-mines.vercel.app)https://campo-minado-mines.vercel.app).
+Mini game of mines (https://campo-minado-mines.vercel.app).
