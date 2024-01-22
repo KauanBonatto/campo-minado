@@ -229,9 +229,9 @@ export default function Home() {
   if (loading) return null;
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
+    <main className="flex min-h-screen flex-col items-center justify-between p-24 bg-slate-900">
       {!modalConfigOpen && <div id="game">
-        <h1 className="flex gap-2 m-auto w-max font-bold flex-col ">
+        <h1 className="flex gap-2 m-auto w-max font-bold flex-col text-white">
           CAMPO MINADO - NÍVEL {gameConfig.levelSelected}
           <div>
             <FontAwesomeIcon icon={faFlag} /> - {marksRemain}
@@ -283,8 +283,8 @@ export default function Home() {
         </table>
 
         {isGameOver && <div className="flex justify-center gap-4 mt-8">
-            <div onClick={handleRetry} className="p-3 border font-bold rounded-md  cursor-pointer transition-all hover:bg-white hover:text-black hover:border-black">TENTAR DENOVO</div>
-            <div onClick={handleChangeLevel} className="p-3 border font-bold rounded-md  cursor-pointer transition-all hover:bg-white hover:text-black hover:border-black">TROCAR NÍVEL</div>
+            <div onClick={handleRetry} className="p-3 border font-bold rounded-md  cursor-pointer transition-all text-white hover:bg-white hover:text-black hover:border-black">TENTAR DE NOVO</div>
+            <div onClick={handleChangeLevel} className="p-3 border font-bold rounded-md  cursor-pointer transition-all text-white hover:bg-white hover:text-black hover:border-black">TROCAR NÍVEL</div>
           </div>}
         </div>
       }
