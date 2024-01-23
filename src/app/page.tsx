@@ -309,8 +309,18 @@ export default function Home() {
 
           {isGameOver && (
             <div className="flex justify-center gap-4 mt-8">
-              <Button onClick={handleRetry}>TENTAR DE NOVO</Button>
-              <Button onClick={handleChangeLevel}>TROCAR NÍVEL</Button>
+              <Button
+                theme="bg-slate-500 text-slate-900 hover:bg-slate-500/80"
+                onClick={handleRetry}
+              >
+                TENTAR DE NOVO
+              </Button>
+              <Button
+                theme="bg-slate-500 text-slate-900 hover:bg-slate-500/80"
+                onClick={handleChangeLevel}
+              >
+                TROCAR NÍVEL
+              </Button>
             </div>
           )}
         </div>

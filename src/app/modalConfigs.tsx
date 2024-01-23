@@ -131,7 +131,10 @@ const ModalConfig: React.FC<Props> = ({
               value={configOutros.qtdBombs}
             />
             <div className="flex gap-4 w-full">
-              <Button onClick={() => setIsPersonalized(false)}>
+              <Button
+                theme="bg-slate-500 text-slate-900 hover:bg-slate-500/80"
+                onClick={() => setIsPersonalized(false)}
+              >
                 TROCAR LEVEL
               </Button>
               <Button className="w-full" onClick={() => handleLevelOutros()}>
