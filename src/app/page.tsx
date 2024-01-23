@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Fragment, useEffect, useMemo, useState } from "react";
 
 import ModalConfig from "./modalConfigs";
+import { Button } from "@/components";
 
 interface SquareProps {
   id: string;
@@ -32,7 +33,9 @@ export default function Home() {
   const [modalConfigOpen, setModalConfigOpen] = useState<boolean>(true);
   const [isGameOver, setIsGameOver] = useState<boolean>(false);
   const [matriz, setMatriz] = useState<SquareProps[][]>([]);
-  const [gameConfig, setGameConfig] = useState<GameConfigProps>({} as GameConfigProps);
+  const [gameConfig, setGameConfig] = useState<GameConfigProps>(
+    {} as GameConfigProps
+  );
 
   const newSquare = (row: number, column: number, bombs: BombProps[]) => {
     return {
@@ -83,7 +86,11 @@ export default function Home() {
     const newMatriz: SquareProps[][] = createMatriz();
     const bombs: BombProps[] = generateBombs();
     for (let rowIndex = 0; rowIndex < gameConfig.qtdRows; rowIndex++) {
-      for (let columnIndex = 0; columnIndex < gameConfig.qtdColumns; columnIndex++) {
+      for (
+        let columnIndex = 0;
+        columnIndex < gameConfig.qtdColumns;
+        columnIndex++
+      ) {
         const square = newSquare(rowIndex, columnIndex, bombs);
         newMatriz[rowIndex][columnIndex] = square;
       }
@@ -106,7 +113,11 @@ export default function Home() {
     return bombs;
   };
 
-  const isSquareBomb = (bombs: BombProps[], rowIndex: number, columnIndex: number) => {
+  const isSquareBomb = (
+    bombs: BombProps[],
+    rowIndex: number,
+    columnIndex: number
+  ) => {
     return bombs.some(
       (bomb: BombProps) =>
         bomb.rowIndex === rowIndex && bomb.columnIndex === columnIndex
@@ -138,12 +149,12 @@ export default function Home() {
 
   const markFlag = (
     e: React.MouseEvent<HTMLDivElement, MouseEvent>,
-    rowIndex: number, 
+    rowIndex: number,
     columnIndex: number,
     marked: boolean
   ) => {
     e.preventDefault();
-    setMatriz(prevState => {
+    setMatriz((prevState) => {
       const newMatriz = [...prevState];
       newMatriz[rowIndex][columnIndex].marked = !marksRemain ? false : !marked;
       return newMatriz;
@@ -151,7 +162,7 @@ export default function Home() {
   };
 
   const openSquare = (rowIndex: number, columnIndex: number) => {
-    setMatriz(prevState => {
+    setMatriz((prevState) => {
       const newMatriz = [...prevState];
       newMatriz[rowIndex][columnIndex].opened = true;
       newMatriz[rowIndex][columnIndex].marked = false;
@@ -166,7 +177,6 @@ export default function Home() {
 
       return newMatriz;
     });
-
   };
 
   const openSquaresAround = (rowIndex: number, columnIndex: number) => {
@@ -181,12 +191,12 @@ export default function Home() {
           columnIndex + j < gameConfig.qtdColumns &&
           !newMatriz[rowIndex + i][columnIndex + j].opened
         ) {
-            newMatriz[rowIndex + i][columnIndex + j].opened = true;
-            newMatriz[rowIndex + i][columnIndex + j].marked = false;
+          newMatriz[rowIndex + i][columnIndex + j].opened = true;
+          newMatriz[rowIndex + i][columnIndex + j].marked = false;
 
-            if (newMatriz[rowIndex + i][columnIndex + j].qtdBombsAround == 0) {
-              openSquaresAround(rowIndex + i, columnIndex + j);
-            }
+          if (newMatriz[rowIndex + i][columnIndex + j].qtdBombsAround == 0) {
+            openSquaresAround(rowIndex + i, columnIndex + j);
+          }
         }
       }
     }
@@ -196,12 +206,12 @@ export default function Home() {
 
   const gameOver = () => {
     setMatriz((prevState: SquareProps[][]) => {
-      const newMatriz = prevState.map(row => {
-        return row.map(column => {
+      const newMatriz = prevState.map((row) => {
+        return row.map((column) => {
           return { ...column, opened: true, marked: false };
         });
       });
-  
+
       return newMatriz;
     });
 
@@ -209,8 +219,8 @@ export default function Home() {
   };
 
   const handleRetry = () => {
-    setGameConfig(prevState => {
-      const newState = {...prevState};
+    setGameConfig((prevState) => {
+      const newState = { ...prevState };
       return newState;
     });
 
@@ -218,7 +228,7 @@ export default function Home() {
   };
 
   const handleChangeLevel = () => {
-    setModalConfigOpen(true)
+    setModalConfigOpen(true);
     setIsGameOver(false);
   };
 
@@ -230,66 +240,87 @@ export default function Home() {
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24 bg-slate-900">
-      {!modalConfigOpen && <div id="game">
-        <h1 className="flex gap-2 m-auto w-max font-bold flex-col text-white">
-          CAMPO MINADO - NÍVEL {gameConfig.levelSelected}
-          <div>
-            <FontAwesomeIcon icon={faFlag} /> - {marksRemain}
-          </div>
-        </h1>
-        <table
-          className="flex flex-col justify-center items-center w-min mt-5 m-auto p-3 border rounded-md "
-          onContextMenu={(e) => e.preventDefault()}
-        >
-          <tbody>
-            {matriz.map((row, rowIndex) => (
-              <tr key={`row-${rowIndex}`} className="row flex w-min">
-                {row.map((column, columnIndex) => (
-                  <td
-                    key={`column-${columnIndex}`}
-                    className={`column  ${!column.opened && 'cursor-pointer'}`}
-                  >
-                    <div
-                      {...(!column.opened ? { 
-                        onClick: () => openSquare(rowIndex, columnIndex), 
-                        onContextMenu: (e) => markFlag(e, rowIndex, columnIndex, column.marked),
-                        className: "square flex w-6 h-6 justify-center items-center bg-slate-200 hover:bg-gray-300 cursor-pointer rounded-sm"
-                      } : {
-                        className: "square flex w-6 h-6 justify-center items-center bg-gray-400 cursor-default rounded-sm"
-                      })}
+      {!modalConfigOpen && (
+        <div id="game">
+          <h1 className="flex gap-2 m-auto w-max font-bold flex-col text-white">
+            CAMPO MINADO - NÍVEL {gameConfig.levelSelected}
+            <div>
+              <FontAwesomeIcon icon={faFlag} /> - {marksRemain}
+            </div>
+          </h1>
+          <table
+            className="flex flex-col justify-center items-center w-min mt-5 m-auto p-3 border rounded-md "
+            onContextMenu={(e) => e.preventDefault()}
+          >
+            <tbody>
+              {matriz.map((row, rowIndex) => (
+                <tr key={`row-${rowIndex}`} className="row flex w-min">
+                  {row.map((column, columnIndex) => (
+                    <td
+                      key={`column-${columnIndex}`}
+                      className={`column  ${
+                        !column.opened && "cursor-pointer"
+                      }`}
                     >
-                      {column.opened ? (
-                        <Fragment>
-                          {column.isBomb ? (
-                            <FontAwesomeIcon icon={faBomb} color="black" />
-                          ) : (
-                            <p>{column.qtdBombsAround > 0 && column.qtdBombsAround}</p>
-                          )}
-                        </Fragment>
-                      ) : (
-                        <Fragment>
-                          {column.marked && (
-                            <FontAwesomeIcon icon={faFlag} color="black" />
-                          )}
-                        </Fragment>
-                      )}
+                      <div
+                        {...(!column.opened
+                          ? {
+                              onClick: () => openSquare(rowIndex, columnIndex),
+                              onContextMenu: (e) =>
+                                markFlag(
+                                  e,
+                                  rowIndex,
+                                  columnIndex,
+                                  column.marked
+                                ),
+                              className:
+                                "square flex w-6 h-6 justify-center items-center bg-slate-200 hover:bg-gray-300 cursor-pointer rounded-sm",
+                            }
+                          : {
+                              className:
+                                "square flex w-6 h-6 justify-center items-center bg-gray-400 cursor-default rounded-sm",
+                            })}
+                      >
+                        {column.opened ? (
+                          <Fragment>
+                            {column.isBomb ? (
+                              <FontAwesomeIcon icon={faBomb} color="black" />
+                            ) : (
+                              <p>
+                                {column.qtdBombsAround > 0 &&
+                                  column.qtdBombsAround}
+                              </p>
+                            )}
+                          </Fragment>
+                        ) : (
+                          <Fragment>
+                            {column.marked && (
+                              <FontAwesomeIcon icon={faFlag} color="black" />
+                            )}
+                          </Fragment>
+                        )}
+                      </div>
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
 
-                    </div>
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-
-        {isGameOver && <div className="flex justify-center gap-4 mt-8">
-            <div onClick={handleRetry} className="p-3 border font-bold rounded-md  cursor-pointer transition-all text-white hover:bg-white hover:text-black hover:border-black">TENTAR DE NOVO</div>
-            <div onClick={handleChangeLevel} className="p-3 border font-bold rounded-md  cursor-pointer transition-all text-white hover:bg-white hover:text-black hover:border-black">TROCAR NÍVEL</div>
-          </div>}
+          {isGameOver && (
+            <div className="flex justify-center gap-4 mt-8">
+              <Button onClick={handleRetry}>TENTAR DE NOVO</Button>
+              <Button onClick={handleChangeLevel}>TROCAR NÍVEL</Button>
+            </div>
+          )}
         </div>
-      }
+      )}
 
-      <ModalConfig modalConfigOpen={modalConfigOpen} setModalConfigOpen={setModalConfigOpen} setGameConfig={setGameConfig} />
+      <ModalConfig
+        modalConfigOpen={modalConfigOpen}
+        setModalConfigOpen={setModalConfigOpen}
+        setGameConfig={setGameConfig}
+      />
     </main>
   );
 }

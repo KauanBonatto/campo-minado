@@ -2,7 +2,7 @@
 
 import { ChangeEvent, useState } from "react";
 import Modal from "./modal";
-
+import { Button, Input } from "../components";
 import type { GameConfigProps } from "./page";
 
 interface Props {
@@ -106,42 +106,38 @@ const ModalConfig: React.FC<Props> = ({
       renderContent={
         isPersonalized ? (
           <div className="flex w-full h-full items-end m-aut flex-wrap justify-center gap-4">
-            <div>
-              <p className="text-white mb-1">Número de Colunas</p>
-              <input
-                name="qtdColumns"
-                className="bg-slate-700 text-white border rounded-xl p-3"
-                type="number"
-                onChange={(e) => handleChangeOutros(e)}
-                value={configOutros.qtdColumns}
-              />
+            <Input
+              textLabel="Número de Colunas"
+              name="qtdColumns"
+              className="bg-slate-700 text-white w-full"
+              type="number"
+              onChange={(e) => handleChangeOutros(e)}
+              value={configOutros.qtdColumns}
+            />
+            <Input
+              textLabel="Número de Linhas"
+              name="qtdRows"
+              className="bg-slate-700 text-white w-full"
+              type="number"
+              onChange={(e) => handleChangeOutros(e)}
+              value={configOutros.qtdRows}
+            />
+            <Input
+              textLabel="Número de Bombas"
+              name="qtdBombs"
+              className="bg-slate-700 text-white w-full"
+              type="number"
+              onChange={(e) => handleChangeOutros(e)}
+              value={configOutros.qtdBombs}
+            />
+            <div className="flex gap-4 w-full">
+              <Button onClick={() => setIsPersonalized(false)}>
+                TROCAR LEVEL
+              </Button>
+              <Button className="w-full" onClick={() => handleLevelOutros()}>
+                JOGAR
+              </Button>
             </div>
-            <div>
-              <p className="text-white mb-1">Número de Linhas</p>
-              <input
-                name="qtdRows"
-                className="bg-slate-700 text-white border rounded-xl p-3"
-                type="number"
-                onChange={(e) => handleChangeOutros(e)}
-                value={configOutros.qtdRows}
-              />
-            </div>
-            <div>
-              <p className="text-white mb-1">Número de Bombas</p>
-              <input
-                name="qtdBombs"
-                className="bg-slate-700 text-white border rounded-xl p-3"
-                type="number"
-                onChange={(e) => handleChangeOutros(e)}
-                value={configOutros.qtdBombs}
-              />
-            </div>
-            <button
-              className="py-4 px-10 rounded-2xl bg-slate-100 text-slate-900 text-center font-bold transition-all hover:bg-slate-300"
-              onClick={() => handleLevelOutros()}
-            >
-              JOGAR
-            </button>
           </div>
         ) : (
           <div className="flex w-full h-full items-center m-aut">
@@ -149,8 +145,7 @@ const ModalConfig: React.FC<Props> = ({
               {levels.map((level) => {
                 if (level.levelSelected) {
                   return (
-                    <button
-                      className="py-4 px-10 rounded-2xl bg-slate-100 text-slate-900 text-center font-bold transition-all hover:bg-slate-300"
+                    <Button
                       onClick={() =>
                         handleLevelSelect({
                           levelSelected: level.levelSelected,
@@ -161,16 +156,13 @@ const ModalConfig: React.FC<Props> = ({
                       }
                     >
                       {level.name}
-                    </button>
+                    </Button>
                   );
                 } else {
                   return (
-                    <button
-                      className="py-4 px-10 rounded-2xl bg-slate-100 text-slate-900 text-center font-bold transition-all hover:bg-slate-300"
-                      onClick={() => setIsPersonalized(true)}
-                    >
+                    <Button onClick={() => setIsPersonalized(true)}>
                       {level.name}
-                    </button>
+                    </Button>
                   );
                 }
               })}
