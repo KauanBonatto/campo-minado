@@ -145,27 +145,31 @@ const ModalConfig: React.FC<Props> = ({
         ) : (
           <div className="flex w-full h-full items-center m-aut">
             <div className="flex justify-center w-full h-min flex-wrap gap-4">
-              {levels.map((level) => {
+              {levels.map((level, index) => {
                 if (level.levelSelected) {
                   return (
-                    <Button
-                      onClick={() =>
-                        handleLevelSelect({
-                          levelSelected: level.levelSelected,
-                          qtdRows: level.qtdRows,
-                          qtdColumns: level.qtdColumns,
-                          qtdBombs: level.qtdBombs,
-                        })
-                      }
-                    >
-                      {level.name}
-                    </Button>
+                    <div key={index}>
+                      <Button
+                        onClick={() =>
+                          handleLevelSelect({
+                            levelSelected: level.levelSelected,
+                            qtdRows: level.qtdRows,
+                            qtdColumns: level.qtdColumns,
+                            qtdBombs: level.qtdBombs,
+                          })
+                        }
+                      >
+                        {level.name}
+                      </Button>
+                    </div>
                   );
                 } else {
                   return (
-                    <Button onClick={() => setIsPersonalized(true)}>
-                      {level.name}
-                    </Button>
+                    <div key={index}>
+                      <Button onClick={() => setIsPersonalized(true)}>
+                        {level.name}
+                      </Button>
+                    </div>
                   );
                 }
               })}
