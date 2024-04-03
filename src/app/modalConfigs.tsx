@@ -95,7 +95,7 @@ const ModalConfig: React.FC<Props> = ({
   const handleChangeOutros = (event: ChangeEvent<HTMLInputElement>) => {
     setConfigOutros({
       ...configOutros,
-      [event.target.name]: event.target.value,
+      [event.target.name]: parseFloat(event.target.value),
     });
   };
 
