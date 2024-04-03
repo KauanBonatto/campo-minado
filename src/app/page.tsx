@@ -269,7 +269,7 @@ export default function Home() {
   if (loading) return null;
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-4 md:p-24 bg-slate-900">
+    <main className="flex h-screen flex-col items-center justify-between p-4 md:p-24 bg-slate-900">
       {!modalConfigOpen && (
         <div id="game">
           <h1 className="flex gap-2 m-auto w-max font-bold flex-col text-white">
@@ -357,7 +357,7 @@ export default function Home() {
           )}
           {isGameVictory && (
             <div className="px-10 py-5 bg-slate-700 rounded-3xl mt-4">
-              <h1 className="flex gap-2 m-auto w-max font-black text-center flex-col text-white">
+              <h1 className="flex gap-2 m-auto font-black text-center flex-col text-white">
                 VOCÊ VENCEU
                 <br />
                 <p className=" text-white font-normal">

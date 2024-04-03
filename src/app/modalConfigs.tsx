@@ -143,8 +143,8 @@ const ModalConfig: React.FC<Props> = ({
             </div>
           </div>
         ) : (
-          <div className="flex w-full h-full items-center m-auto">
-            <div className="flex justify-center w-full h-min flex-wrap gap-4">
+          <div className="flex w-full items-center m-auto">
+            <div className="flex justify-center w-full flex-wrap gap-4">
               {levels.map((level, index) => {
                 if (level.levelSelected) {
                   return (
