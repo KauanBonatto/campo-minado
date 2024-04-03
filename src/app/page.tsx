@@ -269,7 +269,7 @@ export default function Home() {
   if (loading) return null;
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24 bg-slate-900">
+    <main className="flex min-h-screen flex-col items-center justify-between p-4 md:p-24 bg-slate-900">
       {!modalConfigOpen && (
         <div id="game">
           <h1 className="flex gap-2 m-auto w-max font-bold flex-col text-white">
@@ -338,7 +338,7 @@ export default function Home() {
           </table>
 
           {isGameOver || isGameVictory ? (
-            <div className="flex justify-center gap-4 mt-8">
+            <div className="flex flex-col md:flex-row justify-center gap-4 mt-8">
               <Button
                 theme="bg-slate-500 text-slate-900 hover:bg-slate-500/80"
                 onClick={handleRetry}

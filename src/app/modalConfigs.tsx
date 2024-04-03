@@ -130,7 +130,7 @@ const ModalConfig: React.FC<Props> = ({
               onChange={(e) => handleChangeOutros(e)}
               value={configOutros.qtdBombs}
             />
-            <div className="flex gap-4 w-full">
+            <div className="flex flex-col md:flex-row gap-4 w-full">
               <Button
                 theme="bg-slate-500 text-slate-900 hover:bg-slate-500/80"
                 onClick={() => setIsPersonalized(false)}
@@ -143,7 +143,7 @@ const ModalConfig: React.FC<Props> = ({
             </div>
           </div>
         ) : (
-          <div className="flex w-full h-full items-center m-aut">
+          <div className="flex w-full h-full items-center m-auto">
             <div className="flex justify-center w-full h-min flex-wrap gap-4">
               {levels.map((level, index) => {
                 if (level.levelSelected) {
