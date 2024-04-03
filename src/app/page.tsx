@@ -32,6 +32,7 @@ export default function Home() {
   const [loading, setLoading] = useState<boolean>(true);
   const [modalConfigOpen, setModalConfigOpen] = useState<boolean>(true);
   const [isGameOver, setIsGameOver] = useState<boolean>(false);
+  const [isGameVictory, setIsGameVictory] = useState<boolean>(false);
   const [matriz, setMatriz] = useState<SquareProps[][]>([]);
   const [gameConfig, setGameConfig] = useState<GameConfigProps>(
     {} as GameConfigProps
@@ -162,21 +163,22 @@ export default function Home() {
   };
 
   const openSquare = (rowIndex: number, columnIndex: number) => {
-    setMatriz((prevState) => {
-      const newMatriz = [...prevState];
-      newMatriz[rowIndex][columnIndex].opened = true;
-      newMatriz[rowIndex][columnIndex].marked = false;
+    const newMatriz = [...matriz];
+    newMatriz[rowIndex][columnIndex].opened = true;
+    newMatriz[rowIndex][columnIndex].marked = false;
 
-      if (newMatriz[rowIndex][columnIndex].isBomb) {
-        gameOver();
-      }
+    if (newMatriz[rowIndex][columnIndex].isBomb) {
+      gameOver();
+    }
 
-      if (newMatriz[rowIndex][columnIndex].qtdBombsAround == 0) {
-        openSquaresAround(rowIndex, columnIndex);
-      }
+    if (newMatriz[rowIndex][columnIndex].qtdBombsAround == 0) {
+      openSquaresAround(rowIndex, columnIndex);
+    }
 
-      return newMatriz;
-    });
+    if (isWinner(newMatriz)) {
+      gameVictory();
+    }
+    setMatriz(newMatriz);
   };
 
   const openSquaresAround = (rowIndex: number, columnIndex: number) => {
@@ -204,18 +206,45 @@ export default function Home() {
     setMatriz(newMatriz);
   };
 
-  const gameOver = () => {
+  const isWinner = (matrix: SquareProps[][]) => {
+    let closedBombs = 0;
+    let squareOpen = 0;
+
+    for (const row of matrix) {
+      for (const square of row) {
+        if (!square.opened && square.isBomb) {
+          closedBombs++;
+        }
+        if (square.opened && !square.isBomb) {
+          squareOpen++;
+        }
+      }
+    }
+    return (
+      closedBombs === gameConfig.qtdBombs &&
+      squareOpen ===
+        gameConfig.qtdRows * gameConfig.qtdColumns - gameConfig.qtdBombs
+    );
+  };
+
+  function openMatrixGame() {
     setMatriz((prevState: SquareProps[][]) => {
       const newMatriz = prevState.map((row) => {
         return row.map((column) => {
           return { ...column, opened: true, marked: false };
         });
       });
-
       return newMatriz;
     });
+  }
 
+  const gameOver = () => {
+    openMatrixGame();
     setIsGameOver(true);
+  };
+
+  const gameVictory = () => {
+    setIsGameVictory(true);
   };
 
   const handleRetry = () => {
@@ -223,12 +252,13 @@ export default function Home() {
       const newState = { ...prevState };
       return newState;
     });
-
+    setIsGameVictory(false);
     setIsGameOver(false);
   };
 
   const handleChangeLevel = () => {
     setModalConfigOpen(true);
+    setIsGameVictory(false);
     setIsGameOver(false);
   };
 
@@ -307,7 +337,7 @@ export default function Home() {
             </tbody>
           </table>
 
-          {isGameOver && (
+          {isGameOver || isGameVictory ? (
             <div className="flex justify-center gap-4 mt-8">
               <Button
                 theme="bg-slate-500 text-slate-900 hover:bg-slate-500/80"
@@ -321,6 +351,20 @@ export default function Home() {
               >
                 TROCAR NÍVEL
               </Button>
+            </div>
+          ) : (
+            <></>
+          )}
+          {isGameVictory && (
+            <div className="px-10 py-5 bg-slate-700 rounded-3xl mt-4">
+              <h1 className="flex gap-2 m-auto w-max font-black text-center flex-col text-white">
+                VOCÊ VENCEU
+                <br />
+                <p className=" text-white font-normal">
+                  A vitória está a poucos passos daquele que não desiste de
+                  lutar.
+                </p>
+              </h1>
             </div>
           )}
         </div>
