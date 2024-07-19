@@ -3,7 +3,7 @@
 import { faker } from "@faker-js/faker";
 import { faBomb, faFlag } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Fragment, useEffect, useMemo, useState } from "react";
+import { Fragment, MouseEvent, useEffect, useMemo, useState } from "react";
 
 import ModalConfig from "./modalConfigs";
 import { Button } from "@/components";
@@ -149,7 +149,7 @@ export default function Home() {
   };
 
   const markFlag = (
-    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
+    e: MouseEvent<HTMLDivElement, globalThis.MouseEvent>,
     rowIndex: number,
     columnIndex: number,
     marked: boolean
