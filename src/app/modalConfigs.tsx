@@ -2,7 +2,7 @@
 
 import { ChangeEvent, Dispatch, FC, SetStateAction, useState } from "react";
 import Modal from "./modal";
-import { Button, Input } from "./components";
+import { Button, Input } from "./components/ui";
 import type { GameConfigProps } from "./page";
 
 interface Props {

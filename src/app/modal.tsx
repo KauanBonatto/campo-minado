@@ -2,7 +2,7 @@
 
 import { faClose } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { ReactNode } from "react";
+import { FC, ReactNode } from "react";
 
 interface Props {
   open: boolean;
@@ -11,7 +11,7 @@ interface Props {
   handleClose?: () => void;
 }
 
-const Modal: React.FC<Props> = ({
+const Modal: FC<Props> = ({
   open,
   title,
   renderContent,
