@@ -6,7 +6,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Fragment, MouseEvent, useEffect, useMemo, useState } from "react";
 
 import ModalConfig from "./modalConfigs";
-import { Button } from "@/app/components";
+import { Button } from "@/app/components/ui";
+import { MenuGame } from "./components/custom";
 
 interface SquareProps {
   id: string;
@@ -345,20 +346,10 @@ export default function Home() {
           </table>
 
           {isGameOver || isGameVictory ? (
-            <div className="flex flex-col md:flex-row justify-center gap-4 mt-8">
-              <Button
-                theme="bg-slate-500 text-slate-900 hover:bg-slate-500/80"
-                onClick={handleRetry}
-              >
-                TENTAR DE NOVO
-              </Button>
-              <Button
-                theme="bg-slate-500 text-slate-900 hover:bg-slate-500/80"
-                onClick={handleChangeLevel}
-              >
-                TROCAR NÍVEL
-              </Button>
-            </div>
+            <MenuGame
+              handleChangeLevel={handleChangeLevel}
+              handleRetry={handleRetry}
+            />
           ) : (
             <></>
           )}
