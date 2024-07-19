@@ -3,10 +3,10 @@
 import { faker } from "@faker-js/faker";
 import { faBomb, faFlag } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Fragment, useEffect, useMemo, useState } from "react";
+import { Fragment, MouseEvent, useEffect, useMemo, useState } from "react";
 
 import ModalConfig from "./modalConfigs";
-import { Button } from "@/components";
+import { GameVictory, MenuGame } from "./components/custom";
 
 interface SquareProps {
   id: string;
@@ -149,7 +149,7 @@ export default function Home() {
   };
 
   const markFlag = (
-    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
+    e: MouseEvent<HTMLDivElement, globalThis.MouseEvent>,
     rowIndex: number,
     columnIndex: number,
     marked: boolean
@@ -176,7 +176,7 @@ export default function Home() {
     }
 
     if (isWinner(newMatriz)) {
-      gameVictory();
+      handleVictory();
     }
     setMatriz(newMatriz);
   };
@@ -243,7 +243,7 @@ export default function Home() {
     setIsGameOver(true);
   };
 
-  const gameVictory = () => {
+  const handleVictory = () => {
     setIsGameVictory(true);
   };
 
@@ -269,7 +269,7 @@ export default function Home() {
   if (loading) return null;
 
   return (
-    <main className="flex h-screen flex-col items-center justify-between p-4 md:p-24 bg-slate-900">
+    <main className="flex min-h-screen h-auto flex-col items-center justify-between p-4 md:p-24 bg-slate-900">
       {!modalConfigOpen && (
         <div id="game">
           <h1 className="flex gap-2 m-auto w-max font-bold flex-col text-white">
@@ -295,14 +295,21 @@ export default function Home() {
                       <div
                         {...(!column.opened
                           ? {
-                              onClick: () => openSquare(rowIndex, columnIndex),
-                              onContextMenu: (e) =>
-                                markFlag(
-                                  e,
-                                  rowIndex,
-                                  columnIndex,
-                                  column.marked
-                                ),
+                              onClick: () => {
+                                if (!isGameOver && !isGameVictory) {
+                                  openSquare(rowIndex, columnIndex);
+                                }
+                              },
+                              onContextMenu: (e) => {
+                                if (!isGameOver && !isGameVictory) {
+                                  markFlag(
+                                    e,
+                                    rowIndex,
+                                    columnIndex,
+                                    column.marked
+                                  );
+                                }
+                              },
                               className:
                                 "square flex w-6 h-6 justify-center items-center bg-slate-200 hover:bg-gray-300 cursor-pointer rounded-sm",
                             }
@@ -338,35 +345,14 @@ export default function Home() {
           </table>
 
           {isGameOver || isGameVictory ? (
-            <div className="flex flex-col md:flex-row justify-center gap-4 mt-8">
-              <Button
-                theme="bg-slate-500 text-slate-900 hover:bg-slate-500/80"
-                onClick={handleRetry}
-              >
-                TENTAR DE NOVO
-              </Button>
-              <Button
-                theme="bg-slate-500 text-slate-900 hover:bg-slate-500/80"
-                onClick={handleChangeLevel}
-              >
-                TROCAR NÍVEL
-              </Button>
-            </div>
+            <MenuGame
+              handleChangeLevel={handleChangeLevel}
+              handleRetry={handleRetry}
+            />
           ) : (
             <></>
           )}
-          {isGameVictory && (
-            <div className="px-10 py-5 bg-slate-700 rounded-3xl mt-4">
-              <h1 className="flex gap-2 m-auto font-black text-center flex-col text-white">
-                VOCÊ VENCEU
-                <br />
-                <p className=" text-white font-normal">
-                  A vitória está a poucos passos daquele que não desiste de
-                  lutar.
-                </p>
-              </h1>
-            </div>
-          )}
+          {isGameVictory && <GameVictory />}
         </div>
       )}
 

@@ -1,14 +1,14 @@
 "use client";
 
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, Dispatch, FC, SetStateAction, useState } from "react";
 import Modal from "./modal";
-import { Button, Input } from "../components";
+import { Button, Input } from "./components/ui";
 import type { GameConfigProps } from "./page";
 
 interface Props {
   modalConfigOpen: boolean;
-  setModalConfigOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  setGameConfig: React.Dispatch<React.SetStateAction<GameConfigProps>>;
+  setModalConfigOpen: Dispatch<SetStateAction<boolean>>;
+  setGameConfig: Dispatch<SetStateAction<GameConfigProps>>;
 }
 
 interface ConfigOutros {
@@ -17,7 +17,7 @@ interface ConfigOutros {
   qtdBombs: number;
 }
 
-const ModalConfig: React.FC<Props> = ({
+const ModalConfig: FC<Props> = ({
   modalConfigOpen,
   setModalConfigOpen,
   setGameConfig,
