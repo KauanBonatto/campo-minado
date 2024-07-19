@@ -295,14 +295,21 @@ export default function Home() {
                       <div
                         {...(!column.opened
                           ? {
-                              onClick: () => openSquare(rowIndex, columnIndex),
-                              onContextMenu: (e) =>
-                                markFlag(
-                                  e,
-                                  rowIndex,
-                                  columnIndex,
-                                  column.marked
-                                ),
+                              onClick: () => {
+                                if (!isGameOver && !isGameVictory) {
+                                  openSquare(rowIndex, columnIndex);
+                                }
+                              },
+                              onContextMenu: (e) => {
+                                if (!isGameOver && !isGameVictory) {
+                                  markFlag(
+                                    e,
+                                    rowIndex,
+                                    columnIndex,
+                                    column.marked
+                                  );
+                                }
+                              },
                               className:
                                 "square flex w-6 h-6 justify-center items-center bg-slate-200 hover:bg-gray-300 cursor-pointer rounded-sm",
                             }
