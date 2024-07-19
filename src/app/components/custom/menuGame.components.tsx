@@ -1,4 +1,4 @@
-import { FC, forwardRef } from "react";
+import { forwardRef } from "react";
 import { Button } from "../ui";
 
 interface MenuGameInterface {
@@ -30,6 +30,6 @@ const MenuGame = forwardRef<HTMLDivElement, MenuGameInterface>(
   }
 );
 
-MenuGame.displayName = "Button";
+MenuGame.displayName = "MenuGame";
 
 export { MenuGame };
