@@ -269,7 +269,7 @@ export default function Home() {
   if (loading) return null;
 
   return (
-    <main className="flex h-screen flex-col items-center justify-between p-4 md:p-24 bg-slate-900">
+    <main className="flex min-h-screen h-auto flex-col items-center justify-between p-4 md:p-24 bg-slate-900">
       {!modalConfigOpen && (
         <div id="game">
           <h1 className="flex gap-2 m-auto w-max font-bold flex-col text-white">
