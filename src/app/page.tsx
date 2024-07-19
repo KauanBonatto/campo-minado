@@ -6,8 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Fragment, MouseEvent, useEffect, useMemo, useState } from "react";
 
 import ModalConfig from "./modalConfigs";
-import { Button } from "@/app/components/ui";
-import { MenuGame } from "./components/custom";
+import { GameVictory, MenuGame } from "./components/custom";
 
 interface SquareProps {
   id: string;
@@ -177,7 +176,7 @@ export default function Home() {
     }
 
     if (isWinner(newMatriz)) {
-      gameVictory();
+      handleVictory();
     }
     setMatriz(newMatriz);
   };
@@ -244,7 +243,7 @@ export default function Home() {
     setIsGameOver(true);
   };
 
-  const gameVictory = () => {
+  const handleVictory = () => {
     setIsGameVictory(true);
   };
 
@@ -353,18 +352,7 @@ export default function Home() {
           ) : (
             <></>
           )}
-          {isGameVictory && (
-            <div className="px-10 py-5 bg-slate-700 rounded-3xl mt-4">
-              <h1 className="flex gap-2 m-auto font-black text-center flex-col text-white">
-                VOCÊ VENCEU
-                <br />
-                <p className=" text-white font-normal">
-                  A vitória está a poucos passos daquele que não desiste de
-                  lutar.
-                </p>
-              </h1>
-            </div>
-          )}
+          {isGameVictory && <GameVictory />}
         </div>
       )}
 
