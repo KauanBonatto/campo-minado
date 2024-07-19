@@ -1,1 +1,2 @@
-export { MenuGame } from "./menuGame.components";
+export { MenuGame } from "./menuGame.component";
+export { GameVictory } from "./gameVictory.component";
