@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Fragment, MouseEvent, useEffect, useMemo, useState } from "react";
 
 import ModalConfig from "./modalConfigs";
-import { GameVictory, MenuGame } from "./components/custom";
+import { ButtonThemeMode, GameVictory, MenuGame } from "./components/custom";
 
 interface SquareProps {
   id: string;
@@ -269,17 +269,17 @@ export default function Home() {
   if (loading) return null;
 
   return (
-    <main className="flex min-h-screen h-auto flex-col items-center justify-between p-4 md:p-24 bg-slate-900">
+    <main className="flex min-h-screen h-auto flex-col items-center justify-between p-4 md:p-24 bg-slate-100 dark:bg-slate-900">
       {!modalConfigOpen && (
         <div id="game">
-          <h1 className="flex gap-2 m-auto w-max font-bold flex-col text-white">
+          <h1 className="flex gap-2 m-auto w-max font-bold flex-col text-slate-800 dark:text-white">
             CAMPO MINADO - NÍVEL {gameConfig.levelSelected}
             <div>
               <FontAwesomeIcon icon={faFlag} /> - {marksRemain}
             </div>
           </h1>
           <table
-            className="flex flex-col justify-center items-center w-min mt-5 m-auto p-3 border rounded-md "
+            className="flex flex-col justify-center items-center w-min mt-5 m-auto p-4 border rounded-2xl"
             onContextMenu={(e) => e.preventDefault()}
           >
             <tbody>
@@ -288,7 +288,7 @@ export default function Home() {
                   {row.map((column, columnIndex) => (
                     <td
                       key={`column-${columnIndex}`}
-                      className={`column  ${
+                      className={`column p-[0.10rem] ${
                         !column.opened && "cursor-pointer"
                       }`}
                     >
@@ -311,19 +311,23 @@ export default function Home() {
                                 }
                               },
                               className:
-                                "square flex w-6 h-6 justify-center items-center bg-slate-200 hover:bg-gray-300 cursor-pointer rounded-sm",
+                                "square flex w-8 h-8 justify-center items-center bg-slate-700 hover:bg-gray-800 dark:bg-slate-200 dark:hover:bg-gray-300 cursor-pointer rounded-md",
                             }
                           : {
                               className:
-                                "square flex w-6 h-6 justify-center items-center bg-gray-400 cursor-default rounded-sm",
+                                "square flex w-8 h-8 justify-center items-center bg-gray-400 dark:bg-gray-400 cursor-default rounded-md",
                             })}
                       >
                         {column.opened ? (
                           <Fragment>
                             {column.isBomb ? (
-                              <FontAwesomeIcon icon={faBomb} color="black" />
+                              <FontAwesomeIcon
+                                className="text-xl"
+                                icon={faBomb}
+                                color="black"
+                              />
                             ) : (
-                              <p>
+                              <p className="text-xl">
                                 {column.qtdBombsAround > 0 &&
                                   column.qtdBombsAround}
                               </p>
@@ -332,7 +336,11 @@ export default function Home() {
                         ) : (
                           <Fragment>
                             {column.marked && (
-                              <FontAwesomeIcon icon={faFlag} color="black" />
+                              <FontAwesomeIcon
+                                className="text-xl"
+                                icon={faFlag}
+                                color="black"
+                              />
                             )}
                           </Fragment>
                         )}
@@ -361,6 +369,8 @@ export default function Home() {
         setModalConfigOpen={setModalConfigOpen}
         setGameConfig={setGameConfig}
       />
+
+      <ButtonThemeMode />
     </main>
   );
 }

@@ -14,13 +14,13 @@ const MenuGame = forwardRef<HTMLDivElement, MenuGameInterface>(
         ref={ref}
       >
         <Button
-          theme="bg-slate-500 text-slate-900 hover:bg-slate-500/80"
+          theme="bg-slate-300 text-slate-700 hover:bg-slate-400/80 dark:bg-slate-500 dark:text-slate-900 dark:hover:bg-slate-500/80"
           onClick={handleRetry}
         >
           TENTAR DE NOVO
         </Button>
         <Button
-          theme="bg-slate-500 text-slate-900 hover:bg-slate-500/80"
+          theme="bg-slate-300 text-slate-700 hover:bg-slate-400/80 dark:bg-slate-500 dark:text-slate-900 dark:hover:bg-slate-500/80"
           onClick={handleChangeLevel}
         >
           TROCAR NÍVEL
