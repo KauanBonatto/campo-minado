@@ -269,10 +269,10 @@ export default function Home() {
   if (loading) return null;
 
   return (
-    <main className="flex min-h-screen h-auto flex-col items-center justify-between p-4 md:p-24 bg-slate-900">
+    <main className="flex min-h-screen h-auto flex-col items-center justify-between p-4 md:p-24 bg-slate-100 dark:bg-slate-900">
       {!modalConfigOpen && (
         <div id="game">
-          <h1 className="flex gap-2 m-auto w-max font-bold flex-col text-white">
+          <h1 className="flex gap-2 m-auto w-max font-bold flex-col text-slate-800 dark:text-white">
             CAMPO MINADO - NÍVEL {gameConfig.levelSelected}
             <div>
               <FontAwesomeIcon icon={faFlag} /> - {marksRemain}
@@ -311,17 +311,21 @@ export default function Home() {
                                 }
                               },
                               className:
-                                "square flex w-8 h-8 justify-center items-center bg-slate-200 hover:bg-gray-300 cursor-pointer rounded-md",
+                                "square flex w-8 h-8 justify-center items-center bg-slate-700 hover:bg-gray-800 dark:bg-slate-200 dark:hover:bg-gray-300 cursor-pointer rounded-md",
                             }
                           : {
                               className:
-                                "square flex w-8 h-8 justify-center items-center bg-gray-400 cursor-default rounded-md",
+                                "square flex w-8 h-8 justify-center items-center bg-gray-400 dark:bg-gray-400 cursor-default rounded-md",
                             })}
                       >
                         {column.opened ? (
                           <Fragment>
                             {column.isBomb ? (
-                              <FontAwesomeIcon className="text-xl" icon={faBomb} color="black" />
+                              <FontAwesomeIcon
+                                className="text-xl"
+                                icon={faBomb}
+                                color="black"
+                              />
                             ) : (
                               <p className="text-xl">
                                 {column.qtdBombsAround > 0 &&
@@ -332,7 +336,11 @@ export default function Home() {
                         ) : (
                           <Fragment>
                             {column.marked && (
-                              <FontAwesomeIcon className="text-xl" icon={faFlag} color="black" />
+                              <FontAwesomeIcon
+                                className="text-xl"
+                                icon={faFlag}
+                                color="black"
+                              />
                             )}
                           </Fragment>
                         )}

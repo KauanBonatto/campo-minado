@@ -109,7 +109,7 @@ const ModalConfig: FC<Props> = ({
             <Input
               textLabel="Número de Colunas"
               name="qtdColumns"
-              className="bg-slate-700 text-white w-full"
+              className="bg-slate-300 text-slate-700 dark:bg-slate-700 dark:text-white w-full"
               type="number"
               onChange={(e) => handleChangeOutros(e)}
               value={configOutros.qtdColumns}
@@ -117,7 +117,7 @@ const ModalConfig: FC<Props> = ({
             <Input
               textLabel="Número de Linhas"
               name="qtdRows"
-              className="bg-slate-700 text-white w-full"
+              className="bg-slate-300 text-slate-700 dark:bg-slate-700 dark:text-white w-full"
               type="number"
               onChange={(e) => handleChangeOutros(e)}
               value={configOutros.qtdRows}
@@ -125,19 +125,22 @@ const ModalConfig: FC<Props> = ({
             <Input
               textLabel="Número de Bombas"
               name="qtdBombs"
-              className="bg-slate-700 text-white w-full"
+              className="bg-slate-300 text-slate-700 dark:bg-slate-700 dark:text-white w-full"
               type="number"
               onChange={(e) => handleChangeOutros(e)}
               value={configOutros.qtdBombs}
             />
             <div className="flex flex-col md:flex-row gap-4 w-full">
               <Button
-                theme="bg-slate-500 text-slate-900 hover:bg-slate-500/80"
+                theme="bg-slate-200 text-slate-700 hover:bg-slate-200/80 dark:bg-slate-500 dark:text-slate-900 dark:hover:bg-slate-500/80 font-bold"
                 onClick={() => setIsPersonalized(false)}
               >
                 TROCAR LEVEL
               </Button>
-              <Button className="w-full" onClick={() => handleLevelOutros()}>
+              <Button
+                className="w-full bg-slate-400 text-slate-800 dark:bg-white font-extrabold"
+                onClick={() => handleLevelOutros()}
+              >
                 JOGAR
               </Button>
             </div>
@@ -150,6 +153,7 @@ const ModalConfig: FC<Props> = ({
                   return (
                     <div key={index}>
                       <Button
+                        className="text-slate-700"
                         onClick={() =>
                           handleLevelSelect({
                             levelSelected: level.levelSelected,
@@ -166,7 +170,10 @@ const ModalConfig: FC<Props> = ({
                 } else {
                   return (
                     <div key={index}>
-                      <Button onClick={() => setIsPersonalized(true)}>
+                      <Button
+                        className="text-slate-700"
+                        onClick={() => setIsPersonalized(true)}
+                      >
                         {level.name}
                       </Button>
                     </div>

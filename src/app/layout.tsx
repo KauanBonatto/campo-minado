@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="pt-br">
+    <html lang="pt-br" className="dark">
       <body className={sora.className}>{children}</body>
     </html>
   );
