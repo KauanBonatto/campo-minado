@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Fragment, MouseEvent, useEffect, useMemo, useState } from "react";
 
 import ModalConfig from "./modalConfigs";
-import { GameVictory, MenuGame } from "./components/custom";
+import { ButtonThemeMode, GameVictory, MenuGame } from "./components/custom";
 
 interface SquareProps {
   id: string;
@@ -369,6 +369,8 @@ export default function Home() {
         setModalConfigOpen={setModalConfigOpen}
         setGameConfig={setGameConfig}
       />
+
+      <ButtonThemeMode />
     </main>
   );
 }
