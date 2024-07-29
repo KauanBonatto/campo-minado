@@ -20,7 +20,7 @@ const Modal: FC<Props> = ({
   if (!open) return null;
 
   return (
-    <main className="fixed w-3/4 md:w-1/2 h-max bg-slate-700 rounded-md">
+    <main className="fixed w-3/4 md:w-1/2 h-max bg-slate-700 rounded-[2rem]">
       <div className="p-8 w-full h-full">
         <h1 className="text-white text-center font-bold mb-8">
           {title}
