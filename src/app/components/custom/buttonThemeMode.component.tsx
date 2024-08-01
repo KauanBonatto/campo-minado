@@ -1,18 +1,22 @@
 import { Button } from "../ui";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMoon } from "@fortawesome/free-solid-svg-icons";
+import { faMoon, faSun } from "@fortawesome/free-solid-svg-icons";
+import { useState } from "react";
 
 const ButtonThemeMode = () => {
-  const changeMode = () => {
-    const theme = document.documentElement.classList["value"];
-    if (theme === "white") {
-      document.documentElement.classList.remove("white");
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-      document.documentElement.classList.add("white");
-    }
-  };
+  let DARK = "dark",
+    LIGHT = "light";
+
+  const [themeMode, setThemeMode] = useState(DARK);
+
+  function changeMode() {
+    const theme = document.documentElement.classList.contains(LIGHT)
+      ? LIGHT
+      : DARK;
+    setThemeMode(theme === LIGHT ? DARK : LIGHT);
+    document.documentElement.classList.toggle(LIGHT);
+    document.documentElement.classList.toggle(DARK);
+  }
 
   return (
     <Button
@@ -21,8 +25,7 @@ const ButtonThemeMode = () => {
     >
       <FontAwesomeIcon
         className="text-xl text-white dark:text-slate-600"
-        icon={faMoon}
-        color="black"
+        icon={themeMode === LIGHT ? faMoon : faSun}
       />
     </Button>
   );
