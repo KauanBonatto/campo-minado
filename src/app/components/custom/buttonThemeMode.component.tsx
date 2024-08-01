@@ -20,7 +20,7 @@ const ButtonThemeMode = () => {
 
   return (
     <Button
-      className="fixed right-5 bottom-5 bg-slate-600 hover:bg-slate-400/80 dark:bg-slate-100 dark:hover:bg-slate-100/80 rounded-full"
+      className="fixed right-5 bottom-5 bg-slate-800 hover:bg-slate-800/80 dark:bg-slate-100 dark:hover:bg-slate-100/80 rounded-full"
       onClick={changeMode}
     >
       <FontAwesomeIcon
