@@ -31,7 +31,6 @@ export default function Home() {
   const [loading, setLoading] = useState<boolean>(true);
   const [modalConfigOpen, setModalConfigOpen] = useState<boolean>(true);
   const [isGameOver, setIsGameOver] = useState<boolean>(false);
-  const [isGameDone, setIsGameDone] = useState<boolean>(false);
   const [matriz, setMatriz] = useState<SquareProps[][]>([]);
   const [gameConfig, setGameConfig] = useState<GameConfigProps>({} as GameConfigProps);
 
@@ -209,12 +208,6 @@ export default function Home() {
     setIsGameOver(true);
   };
 
-  const checkGameDone = () => {
-    matriz.forEach(row => {
-
-    });
-  };
-
   const handleRetry = () => {
     setGameConfig(prevState => {
       const newState = {...prevState};
@@ -293,11 +286,6 @@ export default function Home() {
             <div onClick={handleRetry} className="p-3 border font-bold rounded-md  cursor-pointer transition-all hover:bg-white hover:text-black hover:border-black">TENTAR DENOVO</div>
             <div onClick={handleChangeLevel} className="p-3 border font-bold rounded-md  cursor-pointer transition-all hover:bg-white hover:text-black hover:border-black">TROCAR NÍVEL</div>
           </div>}
-
-        {isGameDone && <div className="flex justify-center gap-4 mt-8">
-          <div onClick={handleRetry} className="p-3 border font-bold rounded-md  cursor-pointer transition-all hover:bg-white hover:text-black hover:border-black">TENTAR DENOVO</div>
-          <div onClick={handleChangeLevel} className="p-3 border font-bold rounded-md  cursor-pointer transition-all hover:bg-white hover:text-black hover:border-black">TROCAR NÍVEL</div>
-        </div>}
         </div>
       }
 
